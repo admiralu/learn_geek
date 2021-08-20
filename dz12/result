@@ -1,0 +1,42 @@
+san@orangepi3:~/learn_geek/dz12$ ./dz12_v1k -h
+enter path
+san@orangepi3:~/learn_geek/dz12$ ./dz12_v1k -d ~/learn_geek/dz12
+d=/home/san/learn_geek/dz12
+file ..
+dir test2
+file ..
+file test_file4
+file test_file3
+file .
+file dz12_v4k
+file dz12_v4.c
+file dz12_v1k
+file dz12_v3k
+dir test1
+file ..
+file test_file2
+file test_file1
+file .
+file dz12_v3.c
+file dz12_v1.c
+file dz12_v2.c
+file .
+file dz12_v2k
+san@orangepi3:~/learn_geek/dz12$ tree
+.
+├── dz12_v1.c
+├── dz12_v1k
+├── dz12_v2.c
+├── dz12_v2k
+├── dz12_v3.c
+├── dz12_v3k
+├── dz12_v4.c
+├── dz12_v4k
+├── test1
+│   ├── test_file1
+│   └── test_file2
+└── test2
+    ├── test_file3
+    └── test_file4
+
+2 directories, 12 files
