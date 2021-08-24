@@ -24,14 +24,16 @@ void print_file_contents(const char *strfile, bool stat, char *month);
 void print_measurements(int size_meas, data_t *ukaz_meas);
 //void init_data(data_t *ukaz_meas);
 void init_mem(int size_meas, data_t *ukaz_meas);
-void init_data2(int size_meas, data_t *ukaz_meas, const char *strfile);
+int init_data2(int *size_meas1, data_t *ukaz_meas, const char *strfile);
+void print_data_info(data_t *ukaz_meas, int size_meas, int number_month, bool selstat);
 
 int main(int argc, char *argv[])
 {
   const char *opts = "h::m::f:";
   bool selstat = false;
   int ret;
-  int size_meas = 10;
+  int size_meas = 8;
+  int number_month;
   data_t meas[size_meas];
   data_t *ukaz_meas = &meas[size_meas];
   
@@ -47,9 +49,10 @@ while ((ret = getopt(argc, argv, opts)) != -1)
            }
           case 'f' :
            {
-           printf("argv[2] = %s\n", argv[2]);
+           number_month = atoi(argv[2]);
+           printf("number_month = %d, selstat %d\n", number_month, selstat);
            printf("optarg = %s\n", optarg);
-           init_data2(size_meas, &meas[size_meas], optarg);
+           init_data2(&size_meas, &meas[size_meas], optarg);
            //print_file_contents(optarg, selstat, argv[2]);
            break;
            }
@@ -67,6 +70,8 @@ while ((ret = getopt(argc, argv, opts)) != -1)
   
   print_measurements(size_meas, meas);
   printf("temper 10 = %d\n", meas[9].minutes);
+  printf("size_meas = %d\n", size_meas);
+  print_data_info(ukaz_meas, size_meas, number_month, selstat);
 /*typedef struct measurements meas_t;
 
 void init_meas(meas_t *m)
@@ -81,6 +86,7 @@ void print_meas(meas_t m)
 {
     printf("Meas D:%d M:%d Y:%d T:%d\n", m.day, m.month, m.year, m.temperature);
 }*/
+  free(meas);
   return 0;
 }
 
@@ -107,7 +113,7 @@ void init_mem(int size_meas, data_t *ukaz_meas)
      ukaz_meas = malloc(size_meas * sizeof(data_t));
    }
 
-void init_data2(int size_meas, data_t *ukaz_meas, const char *strfile)
+int init_data2(int *size_meas1, data_t *ukaz_meas, const char *strfile)
    {
      FILE *fp = fopen(strfile, "r");
      int schetstrok = 0;
@@ -130,13 +136,56 @@ void init_data2(int size_meas, data_t *ukaz_meas, const char *strfile)
       schetstrok++;
       printf("scanfret %d schetstrok =%d\n", scanfret, schetstrok);
     }
+     *size_meas1 = schetstrok;
      fclose(fp);
-     /*for (int i=0; i<size_meas; i++)
-       {
-       init_data(ukaz_meas);  
-       }*/
+     return *size_meas1;
     } 
 
+void print_data_info(data_t *ukaz_meas, int size_meas, int number_month, bool selstat)
+{
+  int max_temp_year = ukaz_meas[0].temperature;
+  int min_temp_year = 100;
+  int average_annual_temp = 0;
+  int max_temp_month = 0;
+  int min_temp_month = 100;
+  int average_month_temp = 0;
+  int chet_day_month = 0;
+  int amount_temp = 0;
+  
+  if (selstat = 1)
+  {
+  while(ukaz_meas->month = number_month)
+   {
+     if (ukaz_meas->temperature > max_temp_month) 
+        {
+            max_temp_month = ukaz_meas->temperature;
+        }
+      if (ukaz_meas->temperature < min_temp_month) 
+        {
+            min_temp_month = ukaz_meas->temperature;
+        }
+       chet_day_month++;
+       amount_temp = amount_temp + ukaz_meas->temperature;
+    }
+    printf("max_temp_month = %d, min_temp_month = %d, average_month_temp = %d\n", max_temp_month, min_temp_month, amount_temp/chet_day_month);
+   }
+  else if(selstat = 0)
+  {   
+  for (int i = 0; i < size_meas; i++) 
+   {
+     if (ukaz_meas[i].temperature > max_temp_year) 
+        {
+            max_temp_year = ukaz_meas[i].temperature;
+        }
+     if (ukaz_meas[i].temperature < min_temp_year) 
+        {
+            min_temp_year = ukaz_meas[i].temperature;
+        }
+       amount_temp = amount_temp + ukaz_meas[i].temperature;
+    }
+    printf("max_temp_year = %d, min_temp_year = %d, average_year_temp = %d\n", max_temp_month, min_temp_month, amount_temp/size_meas);
+   }   
+}
 /*void print_file_contents(const char *strfile, bool stat, char *month)
 {
 FILE *fp;
