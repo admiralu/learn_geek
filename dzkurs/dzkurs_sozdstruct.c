@@ -186,6 +186,12 @@ void print_data_info(data_t *ukaz_meas, int size_meas, int number_month, bool se
     printf("max_temp_year = %d, min_temp_year = %d, average_year_temp = %d\n", max_temp_month, min_temp_month, amount_temp/size_meas);
    }   
 }
+
+
+void reinit_mem(int size_meas2, data_t *ukaz_meas)
+   {
+     ukaz_meas = malloc(size_meas2 * sizeof(data_t));
+   }
 /*void print_file_contents(const char *strfile, bool stat, char *month)
 {
 FILE *fp;
