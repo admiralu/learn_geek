@@ -24,6 +24,7 @@ void print_file_contents(const char *strfile, bool stat, char *month);
 void print_measurements(int size_meas, data_t *ukaz_meas);
 //void init_data(data_t *ukaz_meas);
 void init_mem(int size_meas, data_t *ukaz_meas);
+void reinit_mem(int size_meas2, data_t *ukaz_meas);
 int init_data2(int *size_meas1, data_t *ukaz_meas, const char *strfile);
 void print_data_info(data_t *ukaz_meas, int size_meas, int number_month, bool selstat);
 
@@ -134,9 +135,14 @@ int init_data2(int *size_meas1, data_t *ukaz_meas, const char *strfile)
                   &ukaz_meas->minutes,
                   &ukaz_meas->temperature);
       schetstrok++;
+      if (schetstrok % 100 == 0)
+        {
+          reinit_mem(schetstrok, &ukaz_meas[size_meas]);
+        }
       printf("scanfret %d schetstrok =%d\n", scanfret, schetstrok);
     }
      *size_meas1 = schetstrok;
+     reinit_mem(schetstrok, &ukaz_meas[size_meas]);
      fclose(fp);
      return *size_meas1;
     } 
@@ -190,7 +196,7 @@ void print_data_info(data_t *ukaz_meas, int size_meas, int number_month, bool se
 
 void reinit_mem(int size_meas2, data_t *ukaz_meas)
    {
-     ukaz_meas = malloc(size_meas2 * sizeof(data_t));
+     ukaz_meas = realloc(ukaz_meas, size_meas2 * sizeof(data_t));
    }
 /*void print_file_contents(const char *strfile, bool stat, char *month)
 {
